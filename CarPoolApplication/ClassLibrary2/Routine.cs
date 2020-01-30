@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using CarPoolApplication.Models;
 using CarPoolApplication.Services;
@@ -439,6 +441,28 @@ namespace CarPoolApplication
                     Console.WriteLine("No Such Account Exists!!!");
             }
 
+        internal void StoreToLocal(Database.Database dBase)
+        {
+            string users = JsonConvert.SerializeObject(dBase.Users);
+            File.WriteAllText("D:\\Rar\\CarPoolApplication\\LocalJSonRepository\\users.json", users);
+            string offering = JsonConvert.SerializeObject(dBase.Offerring);
+            File.WriteAllText("D:\\Rar\\CarPoolApplication\\LocalJSonRepository\\offering.json", offering);
+            string booking = JsonConvert.SerializeObject(dBase.Bookings);
+            File.WriteAllText("D:\\Rar\\CarPoolApplication\\LocalJSonRepository\\booking.json", booking);
+        }
+
+        internal void RetrieveLocalData(Database.Database dBase)
+        {
+           if(File.Exists("D:\\Rar\\CarPoolApplication\\LocalJSonRepository\\users.json") && File.Exists("D:\\Rar\\CarPoolApplication\\LocalJSonRepository\\offering.json") && File.Exists("D:\\Rar\\CarPoolApplication\\LocalJSonRepository\\booking.json"))
+            {
+                string usersJson = File.ReadAllText("D:\\Rar\\CarPoolApplication\\LocalJSonRepository\\users.json");
+                dBase.Users = JsonConvert.DeserializeObject<List<User>>(usersJson);
+                string bookingsJson = File.ReadAllText("D:\\Rar\\CarPoolApplication\\LocalJSonRepository\\booking.json");
+                dBase.Bookings = JsonConvert.DeserializeObject<List<Booking>>(bookingsJson);
+                string offeringJson = File.ReadAllText("D:\\Rar\\CarPoolApplication\\LocalJSonRepository\\offering.json");
+                dBase.Offerring = JsonConvert.DeserializeObject<List<Offering>>(offeringJson);
+            }
+        }
 
     }
 }
